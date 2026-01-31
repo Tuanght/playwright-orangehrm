@@ -41,14 +41,14 @@ export default defineConfig({
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com',
 
-    trace: 'on',
+    trace: 'retain-on-failure',
 
     screenshot: {
-      mode:'on',
+      mode:'only-on-failure',
     },
     
     video: {
-      mode: 'on',
+      mode: 'retain-on-failure',
       size: { width: 1920, height: 1080 }
     },
 
@@ -75,7 +75,7 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'], 
-        ...baseConfig.use,
+        // ...baseConfig.use,
       },
       dependencies: ['setup'],
     },
