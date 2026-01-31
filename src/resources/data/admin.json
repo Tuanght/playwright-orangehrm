@@ -1,0 +1,24 @@
+{
+    "addEmployee": {
+        "data": {
+            "firstName": "john",
+            "lastName": "doe",
+            "employeeId": "E123"
+        }
+    },
+    "add": {
+        "data": {
+            "username": "johndoe", 
+            "userRole": "ESS",
+            "employeeName": "john doe", 
+            "status": "Enabled",
+            "password": "admin@123",
+            "confirmPassword": "admin@123"
+        }
+    },
+    "update":  {
+        "data": {
+            "status": "Disabled"
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "add": {
+        "data": {
+            "firstName": "john",
+            "lastName": "doe",
+            "employeeId": "E123"
+        }
+    },
+    "update":  {
+        "data": {
+            "employeeId": "E123",
+            "firstName": "mary",
+            "lastName": "james"
+        }
+    }
+}

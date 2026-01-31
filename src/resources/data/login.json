@@ -1,0 +1,74 @@
+{
+  "TC_02": {
+    "description": "Successful with admin account",
+    "Flat": "success",
+    "data": {
+      "username": "Admin",
+      "password": "admin123",
+      "expectedUrl": "/dashboard"
+    }
+  },
+    "TC_03": {
+    "description": "Successful with username uppercase",
+    "Flat": "success",
+    "data": {
+      "username": "ADMIN",
+      "password": "admin123",
+      "expectedUrl": "/dashboard"
+    }
+  },
+    "TC_04": {
+    "description": "Successful with username lowercase",
+    "Flat": "success",
+    "data": {
+      "username": "admin",
+      "password": "admin123",
+      "expectedUrl": "/dashboard"
+    }
+  },
+  "TC_05": {
+    "description": "Error with invalid username",
+    "Flat": "error",
+    "data": {
+      "username": "Admin1",
+      "password": "admin123",
+      "expectedLoginError": "Invalid credentials"
+    }
+  },
+  "TC_06": {
+    "description": "Error with invalid password",
+    "Flat": "error",
+    "data": {
+      "username": "Admin",
+      "password": "admin1234",
+      "expectedLoginError": "Invalid credentials"
+    }
+  },
+  "TC_07": {
+    "description": "Error with username = empty",
+    "Flat": "error",
+    "data": {
+      "username": "",
+      "password": "admin123",
+      "expectedInputError": "Required"
+    }
+  },
+    "TC_08": {
+    "description": "Error with password = empty",
+    "Flat": "error",
+    "data": {
+      "username": "Admin",
+      "password": "",
+      "expectedInputError": "Required"
+    }
+  },
+    "TC_09": {
+    "description": "Error with username & password = empty",
+    "Flat": "error",
+    "data": {
+      "username": "",
+      "password": "",
+      "expectedInputError": "Required"
+    }
+  }
+}
