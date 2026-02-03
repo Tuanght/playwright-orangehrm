@@ -1,0 +1,98 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+# ======================================================
+# CẤP ĐỘ 1: Workflow Level (Toàn cục)
+# Tác dụng: Mọi Job (test-e2e, test-api) đều nhìn thấy.
+# ======================================================
+env:
+  PROJECT_NAME: "Learning-Playwright-CI"
+  ENVIRONMENT: "staging"
+  # Mẹo: CI=true giúp Playwright biết nó đang chạy trên server
+  CI: true
+
+jobs:
+  # ----------------------------------------------------------------
+  # JOB 1: CHẠY E2E TEST (Cần Browser, cần Report)
+  # ----------------------------------------------------------------
+  test-e2e:
+    name: Run E2E Tests (Chrome)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    # ======================================================
+    # CẤP ĐỘ 2: Job Level
+    # Tác dụng: Chỉ áp dụng cho Job "test-e2e" này.
+    # Job "test-api" bên dưới sẽ KHÔNG thấy các biến này.
+    # ======================================================
+    env:
+      BROWSER: chromium
+      RETRIES: 2
+
+    steps:
+      # 1. Lấy code về
+      - uses: actions/checkout@v4
+
+      # 2. Cài Node.js (Version 20 LTS)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3. Cài Dependencies (Dùng npm ci cho môi trường sạch)
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Cài Playwright Browsers & OS Dependencies
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # 5. Chạy Test
+      # ======================================================
+      # CẤP ĐỘ 3: Step Level (Chi tiết nhất)
+      # Tác dụng: Chỉ lệnh này mới đọc được Password.
+      # ======================================================
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          # Lấy mật khẩu từ GitHub Secrets (Bảo mật)
+          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+          # Ghi đè biến toàn cục (nếu cần test trên URL khác)
+          BASE_URL: "https://staging.example.com"
+
+      # 6. Upload Report (QUAN TRỌNG: Luôn chạy dù test fail)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-e2e
+          path: playwright-report/
+          retention-days: 30
+
+  # ----------------------------------------------------------------
+  # JOB 2: CHẠY API TEST / SANITY (Ví dụ về Job độc lập)
+  # Mục đích: Demo cho học viên thấy Job này không bị ảnh hưởng bởi Job trên
+  # ----------------------------------------------------------------
+  # test-api:
+  #   name: Run API Sanity Check
+  #   runs-on: ubuntu-latest
+
+  #   # Biến ở Cấp độ 2 của Job này hoàn toàn khác Job trên
+  #   env:
+  #     API_TIMEOUT: 5000
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #     - name: Install dependencies
+  #       run: npm ci
+
+  #     # Demo: Chạy test API nhẹ nhàng (Giả lập)
+  #     - name: Run API Tests
+  #       run: echo "Running API tests with timeout $API_TIMEOUT..."
+  #       # Câu lệnh này sẽ thấy ENV 'PROJECT_NAME' (Cấp 1) và 'API_TIMEOUT' (Cấp 2)
+  #       # Nhưng KHÔNG thấy 'BROWSER' (Của Job 1)
